@@ -72,9 +72,10 @@ void Server::start(string host, string port) {
     
     pthread_t t_handler_client;
     
+    cout << "> Tracker started" << endl;
+    cout << "> Waiting connections" << endl;
+    
     while (1) {  // main accept() loop
-        
-        cout << "> Waiting connections" << endl << endl;
         
         new_fd = accept(sockfd, (struct sockaddr *) &their_addr, &sin_size);
         
@@ -98,6 +99,8 @@ void Server::start(string host, string port) {
 }
 
 void *Server::start_handler_request(void *o) {
+    
+    cout << endl;
     
     Helper* helper = (Helper*) o;
     
@@ -167,11 +170,10 @@ void Server::process(int socket, string data) {
         
         // make response from client with all nodes active on tracker
         string nodes_current("-nodes ");
-        nodes_current.append(get_nodes());
+        nodes_current.append(get_nodes()).append(NET_EOM);
         
         // send to client the current nodes in tracket
         send(socket, nodes_current);
-        end_message(socket);
         
     } else if (token.compare(GET_NODES) == 0) {
         // TODO GET NODES
